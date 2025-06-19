@@ -2,10 +2,11 @@ package com.neuedu.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
-
+@Component
 public class JwtUtil {
 
     private static final String KEY = "neuedu";
@@ -26,5 +27,7 @@ public class JwtUtil {
                 .getClaim("claims")
                 .asMap();
     }
+
+
 
 }

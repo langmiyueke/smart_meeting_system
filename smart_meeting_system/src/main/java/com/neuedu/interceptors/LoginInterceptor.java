@@ -17,8 +17,15 @@ public class LoginInterceptor implements HandlerInterceptor {
     StringRedisTemplate stringRedisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String uri = request.getRequestURI();
+        // 放行不需要登录验证的路径
+        if (uri.startsWith("/user/login") || uri.startsWith("/user/register")
+                || uri.startsWith("/user/verificationCode") || uri.startsWith("/user/verifyCode")) {
+            return true;
+        }
         //令牌验证
         String token = request.getHeader("Authorization");
+
         try {
             String redisToken = stringRedisTemplate.opsForValue().get(token);
             if (redisToken == null) {
@@ -27,7 +34,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             Map<String, Object> claims = JwtUtil.parseToken(token);
             ThreadLocalUtil.set(claims);
             return true;
-
         } catch (Exception e) {
             response.setStatus(401);
             return false;
@@ -38,6 +44,5 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         //清空ThreadLocal中的数据，防止内存泄露
         ThreadLocalUtil.remove();
-
     }
 }
