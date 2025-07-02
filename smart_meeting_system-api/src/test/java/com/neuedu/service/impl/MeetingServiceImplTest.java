@@ -1,4 +1,7 @@
-import static org.junit.jupiter.api.Assertions.*;
+package com.neuedu.service.impl;
+
+
+
 class MeetingServiceImplTest {
-  
+
 }

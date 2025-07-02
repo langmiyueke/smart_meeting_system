@@ -1,2 +1,4 @@
-package com.neuedu.controller;public class MeetingController {
+package com.neuedu.controller;
+
+public class MeetingController {
 }
