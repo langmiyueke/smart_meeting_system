@@ -22,7 +22,7 @@ public class EnterpriseService {
         return enterprisesMapper.addEnterprises(enterprises);
     }
 
-    private String generateRandomEnterpriseMark() {
+    public String generateRandomEnterpriseMark() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         int length = 8 + random.nextInt(3); // 随机生成8到10位长度
