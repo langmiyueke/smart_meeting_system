@@ -1,12 +1,17 @@
 package com.neuedu.controler;
 
 import com.neuedu.entity.Enterprises;
+import com.neuedu.entity.Users;
+import com.neuedu.mapper.UsersMapper;
 import com.neuedu.service.EnterpriseService;
 import com.neuedu.mapper.EnterprisesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +23,8 @@ public class EnterprisesController {
     EnterprisesMapper enterprisesMapper;
     @Autowired
     EnterpriseService enterpriseService;
+    @Autowired
+    private UsersMapper usersMapper;
 
     //分页显示租户信息
     @RequestMapping("/getenterprises")
@@ -54,15 +61,33 @@ public class EnterprisesController {
         return result;
     }
 
-    //删除租户信息
+    //删除租户信息同时删除该租户的用户
+    @Transactional
     @RequestMapping("/delenterprises")
     public int delEnterprises(String enterprise_mark) {
+        Enterprises enterprises =enterprisesMapper.getEnterprisesByEnterpriseMark(enterprise_mark);
+        List<Integer> usersid=usersMapper.getUserByEnterpriseName(enterprises.getName());
+        for(Integer userId:usersid){
+            usersMapper.delUsers(userId);
+            usersMapper.delUserInformation(userId);
+        }
         return enterprisesMapper.delEnterprises(enterprise_mark);
     }
 
     //添加租户信息
+    @Transactional
     @RequestMapping("/addenterprises")
     public int addEnterprises(@RequestBody Enterprises enterprises) {
+        Users user = new Users();
+        user.setEnterprise_name(enterprises.getName());
+        user.setUsername(enterprises.getManager_username());
+        user.setNickname(enterprises.getName());
+        user.setPassword(enterprises.getEnterprise_mark());
+        user.setState("正常");
+        user.setRole("管理员");
+        user.setCreate_at(Timestamp.valueOf(LocalDateTime.now()));
+        usersMapper.addUsers(user);
+        usersMapper.addUserInformation(user);
         return enterpriseService.addEnterprises(enterprises);
     }
 
@@ -84,6 +109,18 @@ public class EnterprisesController {
             }
         }
         return enterprise;
+    }
+
+    //获取租户名称
+    @RequestMapping("/enterprisesname")
+    public List<String> getEnterprisesName(){
+        return enterprisesMapper.getEnterprisesName();
+    }
+
+    //通过名称查询租户
+    @RequestMapping("/getenterprisesbyname")
+    public List<String> getEnterprisesByName(String name){
+        return enterprisesMapper.getEnterprisesByName(name);
     }
 
 }

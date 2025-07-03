@@ -21,12 +21,14 @@ public class UserController {
     UsersMapper usersMapper;
 
     //显示用户信息
+    @Transactional
     @RequestMapping("/getusers")
-    public Map<String, Object> getUsersByPage(@RequestParam(defaultValue = "1") int currentPage,
+    public Map<String, Object> getUsersByPage(@RequestParam String enterprise_name,
+                                              @RequestParam(defaultValue = "1") int currentPage,
                                               @RequestParam(defaultValue = "10") int pageSize) {
         int offset = (currentPage - 1) * pageSize;
-        List<Users> users = usersMapper.getUsersByPage(offset, pageSize);
-        int total = usersMapper.getTotalCount();
+        List<Users> users = usersMapper.getUsersByPage(enterprise_name,offset, pageSize);
+        int total = usersMapper.getTotalCount(enterprise_name);
 
         // 格式化日期
         for (Users user : users) {
@@ -47,6 +49,7 @@ public class UserController {
     }
 
     //查询用户信息
+    @Transactional
     @RequestMapping("/searchusers")
     public Map<String, Object> searchUsers(
             @RequestBody SearchUserRequest request,
