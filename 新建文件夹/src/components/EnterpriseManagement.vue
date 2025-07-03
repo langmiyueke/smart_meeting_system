@@ -144,7 +144,10 @@ function refresh() {
     }
   })
       .then(res => {
-        enterprisesList.value = res.data.data;
+        //以名称顺序排序
+        enterprisesList.value = res.data.data.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
         total.value = res.data.total;
       });
 }
@@ -187,7 +190,10 @@ function searchEnterprises() {
     }
   })
       .then(res => {
-        enterprisesList.value = res.data.data;
+        //以名称顺序排序
+        enterprisesList.value = res.data.data.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
         total.value = res.data.total;
       });
 }
@@ -274,30 +280,41 @@ function  deleteEnterprise(enterprise_mark) {
 function addEnterprise() {
   // 重置表单
   Object.assign(enterprise, {
-    name: '',
-    enterprise_mark: '',
-    contact_person: '',
-    phone: '',
-    manager_username: '',
+    name: "",
+    enterprise_mark: "",
+    contact_person: "",
+    phone: "",
+    manager_username: "",
     enterprise_icon: null,
-    comment: ''
+    comment: ""
   })
   adddialogVisible.value = true
 }
 function ensureAddEnterprise() {
-  axios.post("http://localhost:8080/addenterprises", enterprise)
-      .then(res => {
-        if (res.data > 0) {
-          ElMessage.success('新增租户成功')
-          adddialogVisible.value = false
-          refresh()
-        } else {
-          ElMessage.error('新增租户失败')
-        }
-      })
-      .catch(error => {
-        ElMessage.error('新增租户失败: ' + error.message)
-      })
+  if(enterprise.name==null || enterprise.name==""||
+      enterprise.contact_person==null || enterprise.contact_person=="" ||
+      enterprise.phone==null || enterprise.phone==""||
+      enterprise.manager_username==null || enterprise.manager_username==""
+  )
+  {
+    ElMessage("租户名称，联系人，号码,管理员不能为空")
+  }
+  else{
+    axios.post("http://localhost:8080/addenterprises", enterprise)
+        .then(res => {
+          if (res.data > 0) {
+            ElMessage.success('新增租户成功')
+            adddialogVisible.value = false
+            refresh()
+          } else {
+            ElMessage.error('新增租户失败')
+          }
+        })
+        .catch(error => {
+          ElMessage.error('新增租户失败: ' + error.message)
+        })
+  }
+
 }
 
 

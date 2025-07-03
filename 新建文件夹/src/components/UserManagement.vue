@@ -55,20 +55,71 @@ let user = reactive({
   state: "正常",
   job: "",
   role: "",
-  comment:""
+  comment:"",
+  enterprise_name:""
 });
 
 
+// 公司相关状态
+const enterpriseList = ref<string[]>([]) // 修改为字符串数组类型
+const activeEnterpriseName = ref<string | null>(null) // 当前选中的公司名称
+const enterpriseSearch = ref("") // 公司搜索关键词
+const isLoading = ref(false) // 加载状态
+
+// 获取公司列表
+const fetchEnterprises = async () => {
+  try {
+    isLoading.value = true
+    const response = await axios.get("http://localhost:8080/enterprisesname")
+    enterpriseList.value = response.data.sort((a, b) => a.localeCompare(b))//以名称顺序排序
+    if (enterpriseList.value.length > 0) {
+      activeEnterpriseName.value = enterpriseList.value[0]
+      refresh()
+    }
+  } catch (error) {
+    ElMessage.error("获取公司列表失败")
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 搜索公司
+const searchEnterprises = async () => {
+  if (!enterpriseSearch.value.trim()) {
+    fetchEnterprises() // 搜索为空时重置为完整列表
+    return
+  }
+
+  try {
+    isLoading.value = true
+    const response = await axios.get("http://localhost:8080/getenterprisesbyname", {
+      params: { name: enterpriseSearch.value.trim() } // 修复了这里，添加了括号调用trim方法
+    })
+    enterpriseList.value = response.data.sort((a, b) => a.localeCompare(b))//以名称顺序排序
+  } catch (error) {
+    ElMessage.error("搜索公司失败")
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 选择公司
+const selectEnterprise = (enterpriseName: string) => {
+  activeEnterpriseName.value = enterpriseName
+  // 根据公司筛选用户
+  searchUsers()
+}
 
 //mounted钩子，页面加载时获取数据
 onMounted(()=>{
-  refresh()
+  fetchEnterprises()
 })
 
 //刷新与开始时加载数据
 function refresh() {
   axios.get("http://localhost:8080/getusers", {
     params: {
+      enterprise_name:activeEnterpriseName.value,
       currentPage: currentPage.value,
       pageSize: pageSize.value
     }
@@ -107,19 +158,22 @@ function searchUsers() {
     users: {
       username: username.value,
       phone: phone.value,
-      state: state.value
+      state: state.value,
+      enterprise_name: activeEnterpriseName.value
     },
     start: startDate.value,
     end: endDate.value
   };
+  console.log("obj:",obj);
 
   axios.post("http://localhost:8080/searchusers", obj, {
     params: {
       currentPage: currentPage.value,
-      pageSize: pageSize.value
+      pageSize: pageSize.value,
     }
   })
       .then(res => {
+        console.log("res:",res.data.data);
         userList.value = res.data.data;
         total.value = res.data.total;
       });
@@ -218,6 +272,7 @@ function reset_add(){
   user.job="";
   user.role= "";
   user.comment="";
+  user.enterprise_name=activeEnterpriseName.value;
 }
 
 function ensureAddUser(){
@@ -268,22 +323,14 @@ function ensureAddUser(){
           </el-form-item>
 
           <el-form-item label="岗位" prop="job">
-            <el-select v-model="up_user.job" placeholder="请选择岗位" style="width:100%">
-              <el-option label="前端开发" value="frontend"></el-option>
-              <el-option label="后端开发" value="backend"></el-option>
-              <el-option label="产品经理" value="pm"></el-option>
-            </el-select>
+            <el-input v-model="up_user.job" placeholder="请输入工作岗位" clearable />
           </el-form-item>
 
         </el-col>
 
         <el-col :span="12">
           <el-form-item label="归属部门" prop="department">
-            <el-select v-model="up_user.department" placeholder="请选择归属部门" style="width:100%">
-              <el-option label="技术部" value="tech"></el-option>
-              <el-option label="市场部" value="market"></el-option>
-              <el-option label="人事部" value="hr"></el-option>
-            </el-select>
+            <el-input v-model="up_user.department" placeholder="请输入所属部门" clearable />
           </el-form-item>
 
           <el-form-item label="邮箱" prop="email">
@@ -353,22 +400,14 @@ function ensureAddUser(){
           </el-form-item>
 
           <el-form-item label="岗位" prop="job">
-            <el-select v-model="user.job" placeholder="请选择岗位" style="width:100%">
-              <el-option label="前端开发" value="frontend"></el-option>
-              <el-option label="后端开发" value="backend"></el-option>
-              <el-option label="产品经理" value="pm"></el-option>
-            </el-select>
+            <el-input v-model="user.job" placeholder="请输入工作岗位" clearable />
           </el-form-item>
 
         </el-col>
 
         <el-col :span="12">
           <el-form-item label="归属部门" prop="department">
-            <el-select v-model="user.department" placeholder="请选择归属部门" style="width:100%">
-              <el-option label="技术部" value="tech"></el-option>
-              <el-option label="市场部" value="market"></el-option>
-              <el-option label="人事部" value="hr"></el-option>
-            </el-select>
+            <el-input v-model="user.department" placeholder="请输入所属部门" clearable />
           </el-form-item>
 
           <el-form-item label="邮箱" prop="email">
@@ -389,8 +428,6 @@ function ensureAddUser(){
           <el-form-item label="角色" prop="role">
             <el-select v-model="user.role" placeholder="请选择角色" style="width:100%">
               <el-option label="管理员" value="管理员" />
-              <el-option label="用户管理员" value="用户管理员" />
-              <el-option label="租户管理员" value="租户管理员" />
               <el-option label="普通用户" value="普通用户" />
             </el-select>
           </el-form-item>
@@ -422,8 +459,48 @@ function ensureAddUser(){
 
     <el-container>
       <!--边栏-->
-      <el-aside width="200px">
-        Aside
+      <el-aside width="260px" class="company-sidebar">
+        <!-- 搜索区域 -->
+        <div class="search-container">
+          <el-input
+              v-model="enterpriseSearch"
+              placeholder="输入公司名称搜索"
+              clearable
+              @keyup.enter="searchEnterprises"
+              @clear="fetchEnterprises"
+          >
+            <template #append>
+              <el-button :icon="Search" @click="searchEnterprises" />
+            </template>
+          </el-input>
+        </div>
+
+        <!-- 公司列表 -->
+        <div class="enterprise-list">
+          <div
+              v-for="enterprise in enterpriseList"
+              :key="enterprise"
+              class="enterprise-item"
+              :class="{ 'active': activeEnterpriseName === enterprise }"
+              @click="selectEnterprise(enterprise)"
+          >
+            <div class="enterprise-info">
+              <div class="enterprise-name">{{ enterprise }}</div>
+            </div>
+          </div>
+
+          <!-- 加载状态 -->
+          <div v-if="isLoading" class="loading-container">
+            <el-icon class="is-loading"><Loading /></el-icon>
+            加载中...
+          </div>
+
+          <!-- 空状态 -->
+          <div v-if="!isLoading && enterpriseList.length === 0" class="empty-container">
+            <el-icon><FolderDelete /></el-icon>
+            <p>未找到公司数据</p>
+          </div>
+        </div>
       </el-aside>
 
 
@@ -449,8 +526,8 @@ function ensureAddUser(){
             v-model="state"
             style="width: 240px"
             placeholder="请选择状态">
-          <el-option label="正常" value="normal"></el-option>
-          <el-option label="禁用" value="disabled"></el-option>
+          <el-option label="正常" value="正常"></el-option>
+          <el-option label="停用" value="停用"></el-option>
         </el-select>
           <span style="margin-right: 16px;"></span>
           <span style="margin-right: 16px;">创建时间</span>
@@ -521,4 +598,105 @@ function ensureAddUser(){
 
 <style scoped>
 
+/* Sidebar styling */
+.company-sidebar {
+  background-color: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+  height: 100vh;
+  padding: 15px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.enterprise-list {
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.enterprise-item {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+}
+
+.enterprise-item:hover {
+  background-color: #f0f7ff;
+  border-color: #cce0ff;
+  transform: translateX(3px);
+}
+
+.enterprise-item.active {
+  background-color: #e6f1ff;
+  border-left: 3px solid #409eff;
+  font-weight: 500;
+}
+
+.enterprise-info {
+  flex: 1;
+}
+
+.enterprise-name {
+  font-size: 14px;
+  color: #333;
+}
+
+.loading-container,
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0;
+  color: #999;
+}
+
+.loading-container .el-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  animation: rotating 2s linear infinite;
+}
+
+.empty-container .el-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom scrollbar */
+.enterprise-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.enterprise-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.enterprise-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.enterprise-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
 </style>
