@@ -51,4 +51,12 @@ public interface EnterprisesMapper {
     @Select("select * from enterprises where enterprise_mark = #{enterprise_mark}")
     Enterprises getEnterprisesByEnterpriseMark(String enterprise_mark);
 
+    //获取租户名称
+    @Select("select name from enterprises")
+    List<String> getEnterprisesName();
+
+    //通过名称查询租户
+    @Select("select name from enterprises where name like CONCAT('%',#{name},'%')")
+    List<String> getEnterprisesByName(@Param("name") String name);
+
 }
