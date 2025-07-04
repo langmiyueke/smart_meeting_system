@@ -4,11 +4,16 @@ import Home from "../components/Home.vue";
 import Register from "../components/Register.vue";
 import { getToken } from '../utils/token-utils';
 import CourseList from "../components/courseList.vue";
+import UserManagemnet from "../components/UserManagement.vue";
+import EnterpriseManagement from "../components/EnterpriseManagement.vue";
+
 const routes = [
   { path: '/register', component: Register, name: "Register" },
   { path: '/home', component: Home, name: "Home", redirect:'/courseList' },
   { path: '/login', component: Login, name: "Login" },
   { path: '/courseList', component: CourseList, name: "CourseList" },
+  { path: '/userManagement', component: CourseList, name: "CourseList" },
+  { path: '/enterpriseManagemnet', component: CourseList, name: "CourseList" },
   { path: '/', redirect: '/login' },
 ];
 
