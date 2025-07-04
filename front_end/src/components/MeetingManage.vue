@@ -91,10 +91,10 @@
 <div class="cover-image-container">
   <template v-if="scope.row.cover && scope.row.cover.trim() !== ''">
     <img 
-      :src="scope.row.cover" 
+      :src="buildFullUrl(scope.row.cover)" 
       class="cover-image"
       :alt="'会议封面：' + scope.row.name"
-      @click="previewImage(scope.row.cover, scope.row.name)"
+      @click="previewImage(buildFullUrl(scope.row.cover), scope.row.name)"
       
     >
   </template>
@@ -188,6 +188,18 @@ const formatDate = (dateString, includeTime = false) => {
     return '无效日期'
   }
 }
+
+    // 读取图片URL构建函数
+  const buildFullUrl = (path) => {
+      if (!path) return '';
+      // 生产环境使用实际API根地址
+      if (process.env.NODE_ENV === 'production') {
+        return `${process.env.VUE_APP_API_BASE_URL}${path}`;
+      }
+      // 开发环境使用代理前缀
+      return `/api${path}`;
+  };
+
 
 
 /**

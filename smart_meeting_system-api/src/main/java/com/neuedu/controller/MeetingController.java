@@ -23,7 +23,7 @@ public class MeetingController {
 
     @GetMapping("getMeetingById")
     public Result getMeetingById(@RequestParam long id){
-        
+
         return meetingService.getMeetingById(id);
     }
 
