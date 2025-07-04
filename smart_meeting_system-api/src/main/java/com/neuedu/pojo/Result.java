@@ -29,4 +29,8 @@ public class Result<T> {
     public static <E> Result<E> error(String message) {
         return new Result<>(1, message, null);
     }
+
+    public boolean isSuccess() {
+        return true;
+    }
 }

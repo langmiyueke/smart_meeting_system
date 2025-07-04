@@ -6,11 +6,12 @@ import 'element-plus/dist/index.css'
 import App from './App.vue'
 import pinia from './stores';
 const app = createApp(App)
-
+import { createPinia } from 'pinia'
 
 app.use(ElementPlus, {
     locale: zhCn,
 })
 app.use(pinia)
 app.use(router)
+app.use(createPinia())
 app.mount('#app')

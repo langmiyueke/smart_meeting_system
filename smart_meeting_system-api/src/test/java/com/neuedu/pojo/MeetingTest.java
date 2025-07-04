@@ -1,2 +1,4 @@
-package com.neuedu.pojo;public class MeetingTest {
-}
+//package com.neuedu.pojo;
+//
+//public class MeetingTest {
+//}

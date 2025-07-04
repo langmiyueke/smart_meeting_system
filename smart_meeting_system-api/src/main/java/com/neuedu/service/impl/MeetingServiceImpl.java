@@ -152,6 +152,16 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         return Result.success();
     }
 
+    @Override
+    public Result getMeetingById(long id) {
+        Meeting meeting = meetingMapper.selectById(id);
+        if(meeting==null){
+            return Result.error("课程不存在");
+        }
+        System.out.println("查询到的课程: " + meeting);
+        return Result.success(meeting);
+    }
+
 
 }
 

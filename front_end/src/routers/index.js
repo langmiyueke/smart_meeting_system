@@ -5,6 +5,7 @@ import Register from "../components/Register.vue";
 import { getToken } from '../utils/token-utils';
 import CourseList from "../components/CourseList.vue";
 import MeetingManage from "../components/MeetingManage.vue"
+import MeetingDetail from "../components/MeetingDetail.vue";
 const routes = [
   { path: '/register', component: Register, name: "Register" },
   { path: '/home', component: Home, name: "Home", redirect:'/courseList' },
@@ -12,6 +13,12 @@ const routes = [
   { path: '/courseList', component: CourseList, name: "CourseList" },
   { path: '/', redirect: '/login' },
   { path: '/meetingManage', component: MeetingManage, name: "MeetingManage"},
+  {
+  path: '/meetingDetail/:id',
+  name: 'MeetingDetail',
+  component: MeetingDetail  ,
+  meta: { title: '会议详情' }
+},
 ];
 
 const router = createRouter({

@@ -21,14 +21,14 @@ public class MeetingController {
         return result;
     }
 
-/*    @GetMapping("search")
-    Result search(String name){
-        Result result = meetingService.search(name);
-        return result;
-    }*/
+    @GetMapping("getMeetingById")
+    public Result getMeetingById(@RequestParam long id){
+        System.out.println("正在查询会议详细信息:" + id);
+        return meetingService.getMeetingById(id);
+    }
 
     @GetMapping("sorted")
-    Result sorted(String method){
+    public Result sorted(String method){
         Result result = meetingService.sorted(method);
         return result;
     }

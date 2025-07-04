@@ -36,14 +36,25 @@
 
     <!-- 操作按钮 -->
     <div class="toolbar">
-      <el-button type="primary" @click="openAddDialog">新增</el-button>
-      <el-button type="success" @click="exportCourses">导出</el-button>
+      <el-button type="primary" @click="openAddDialog">新增会议</el-button>
+      <el-button type="success" @click="exportCourses">导出数据</el-button>
     </div>
 
     <!-- 会议表格 -->
         <el-table :data="meetingList" style="width: 100%">
         <el-table-column prop="id" label="编号" width="200" />
-        <el-table-column prop="name" label="会议名称" width="300"/>
+             <!-- 修改会议名称列，添加点击跳转 -->
+      <el-table-column label="会议名称" width="300">
+        <template #default="scope">
+          <el-link 
+            type="primary" 
+            @click="viewMeetingDetail(scope.row.id)"
+            class="meeting-name-link"
+          >
+            {{ scope.row.name }}
+          </el-link>
+        </template>
+      </el-table-column>
         <el-table-column prop="content" label="会议简介" width="300"/>
         <el-table-column prop="creator" label="会议作者" width="300"/>
         <el-table-column prop="is_effective" label="会议状态" width="300">
@@ -146,10 +157,15 @@ import MeetingDialog from './MeetingDialog.vue'
 import { ElMessageBox,ElMessage } from 'element-plus'
 import { deleteMeeting,getMeetings,clearIsDeleted } from '../api/index'
 import { useRouter } from 'vue-router'
+import { useMeetingStore } from '../stores/meetingStore'
+
 
 const router = useRouter()
+const meetingStore = useMeetingStore()
 
-
+const viewMeetingDetail = (meetingId) => {
+  router.push(`/meetingDetail/${meetingId}`)
+}
 
 
 // 时间格式化函数
@@ -221,7 +237,7 @@ const fetchMeetings = async () => {
   meetingList.value = response.pageInfo.pageData
   findPageInfo.pageNum = response.pageInfo.pageNum
   findPageInfo.pageSize = response.pageInfo.pageSize
-  totalItems.value = +response.pageInfo.totalSize
+  totalItems.value = response.pageInfo.totalSize
 }
 
 

@@ -33,6 +33,15 @@ export const deleteMeeting = (id) => {
 };
 
 
+// 添加获取单个会议详情的接口
+export const getMeetingById = (id) => {
+return request.get("/meeting/getMeetingById", {
+    params: {
+      id: id
+    }
+  });
+}
+
 
 export const handleAdd = (target, data) => {
   return request.post(`/${target}/handleAdd`, data)
