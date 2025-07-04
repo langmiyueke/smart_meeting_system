@@ -44,10 +44,9 @@
       <div class="cover-section" v-if="meetingDetails.cover">
         <h3>会议封面</h3>
         <el-image 
-          :src="meetingDetails.cover" 
-          :preview-src-list="[meetingDetails.cover]"
-          fit="cover"
-          class="cover-image"
+:src="buildFullUrl(meetingDetails.cover)"
+  :preview-src-list="[buildFullUrl(meetingDetails.cover)]"
+
         />
       </div>
       
@@ -78,11 +77,20 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const meetingId = ref(route.params.id)
-    console.log('完整路由参数:', route.params)
-    console.log('会议ID参数:', route.params.id)
-    console.log(meetingId)
+
     const loading = ref(true)
     const meetingDetails = ref(null)
+
+    // 添加URL构建函数
+    const buildFullUrl = (path) => {
+      if (!path) return '';
+      // 生产环境使用实际API根地址
+      if (process.env.NODE_ENV === 'production') {
+        return `${process.env.VUE_APP_API_BASE_URL}${path}`;
+      }
+      // 开发环境使用代理前缀
+      return `/api${path}`;
+    };
 
     // 时间格式化函数
     const formatDate = (dateString, includeTime = false) => {
@@ -121,11 +129,8 @@ export default {
           throw new Error('会议ID不存在')
         }
 
-        // 重要修改：将参数包装为对象 { id: ... }
-        console.log('调用前ID:', meetingId.value) // 2
         const response = await getMeetingById(meetingId.value)
-        console.log('调用后ID:', meetingId.value)
-        console.log('响应数据:', response)
+
         meetingDetails.value = response
         console.log('接收到的会议信息', meetingDetails.value)
       } catch (error) {
@@ -158,7 +163,8 @@ export default {
       formatDate,
       goBack,
       goToEdit,
-      loading
+      loading,
+      buildFullUrl
     }
   },
   components: {

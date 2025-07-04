@@ -23,7 +23,7 @@ public class MeetingController {
 
     @GetMapping("getMeetingById")
     public Result getMeetingById(@RequestParam long id){
-        System.out.println("正在查询会议详细信息:" + id);
+        
         return meetingService.getMeetingById(id);
     }
 
