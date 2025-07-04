@@ -111,6 +111,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         BeanUtils.copyProperties(vo, meeting); // 只复制同名字段
         meeting.setName(vo.getName()); // 单独处理字段名不一样的
         meeting.setIsDeleted(0);
+        String content = meeting.getContent();
+        if (content.startsWith("<p>") && content.endsWith("</p>")) {
+            content = content.substring(3, content.length() - 4);
+            System.out.println(content);
+        }
+        meeting.setContent(content);
         meetingMapper.insert(meeting);
         return Result.success();
     }
@@ -137,7 +143,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         BeanUtils.copyProperties(vo, meeting);
         meeting.setName(vo.getName());
         meeting.setId((int) vo.getId());
-
+        String content = meeting.getContent();
+        if (content.startsWith("<p>") && content.endsWith("</p>")) {
+            content = content.substring(3, content.length() - 4);
+            System.out.println(content);
+        }
+        meeting.setContent(content);
         int rows = meetingMapper.updateById(meeting);
         if (rows == 0) {
             return Result.error("更新失败，课程可能不存在");

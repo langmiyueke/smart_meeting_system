@@ -57,7 +57,7 @@
       </el-table-column>
         <el-table-column prop="content" label="会议简介" width="300"/>
         <el-table-column prop="creator" label="会议作者" width="300"/>
-        <el-table-column prop="is_effective" label="会议状态" width="300">
+        <el-table-column prop="is_effective" label="会议状态" width="200">
         <template #default="scope">
           <!-- 当值为1时显示有效状态 -->
           <el-tag 
@@ -95,7 +95,7 @@
       class="cover-image"
       :alt="'会议封面：' + scope.row.name"
       @click="previewImage(buildFullUrl(scope.row.cover), scope.row.name)"
-      
+      style="height: 120px;width: 188px;"
     >
   </template>
   <div v-else class="no-cover">
