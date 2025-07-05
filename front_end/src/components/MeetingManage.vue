@@ -65,11 +65,9 @@
             v-if="scope.row.is_effective === true" 
             type="success" 
             effect="dark" 
-            round
-            class="status-tag"
+            size="large"
           >
-            <el-icon class="status-icon-large"><CircleCheck /></el-icon>
-            有效
+            会议状态：有效
           </el-tag>
           
           <!-- 当值为0时显示无效状态 -->
@@ -77,11 +75,21 @@
             v-else-if="scope.row.is_effective === false" 
             type="danger" 
             effect="dark" 
-            round
-            class="status-tag"
+            size="large"
           >
-            <el-icon class="status-icon-large"><CircleClose /></el-icon>
-            无效
+            
+            会议状态：无效
+          </el-tag>
+                    <!-- 当值为null时显示异常状态 -->
+          <el-tag 
+            v-else
+            type="info" 
+            effect="dark" 
+            class="status-tag"
+            size="large"
+          >
+            
+            会议状态：异常
           </el-tag>
         </template>
       </el-table-column> 
@@ -551,8 +559,8 @@ const previewImage = (url: string, name: string) => {
 }
 
 .status-tag {
-  padding: 6px 12px;
-  font-weight: 600;
+  padding: 12px 24px;
+  font-weight: 1000;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
 }
