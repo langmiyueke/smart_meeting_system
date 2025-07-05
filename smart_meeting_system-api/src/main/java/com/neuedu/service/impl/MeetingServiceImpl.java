@@ -90,12 +90,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
             m.setCreator(meeting.getCreator());
             m.setName(meeting.getName());
             m.setContent(meeting.getContent());
+            m.setIsEffective(meeting.getIsEffective());
+
         }
         Arrays.sort(data, new Comparator<MeetingVo>() {
             @Override
             public int compare(MeetingVo o1, MeetingVo o2) {
-                if (method.equals("name")) {
-                    return o1.getName().compareTo(o2.getName()); // 假设 author 是 String
+                if (method.equals("creator")) {
+                    return o1.getCreator().compareTo(o2.getCreator()); // 按照会议创建者creator排序
                 } else {
                     return o1.getName().compareTo(o2.getName());    // 按 name 字符串排序
                 }
@@ -146,7 +148,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         String content = meeting.getContent();
         if (content.startsWith("<p>") && content.endsWith("</p>")) {
             content = content.substring(3, content.length() - 4);
-            System.out.println(content);
+            
         }
         meeting.setContent(content);
         int rows = meetingMapper.updateById(meeting);

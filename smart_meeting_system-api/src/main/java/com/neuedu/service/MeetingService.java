@@ -16,7 +16,7 @@ public interface MeetingService extends IService<Meeting> {
 
     Result getMeetings(PageInfoVo pageInfo);
 
-    /*Result search(String name);*/
+
 
     Result sorted(String method);
 

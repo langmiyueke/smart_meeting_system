@@ -25,6 +25,7 @@
           <el-radio-button label="">默认排序</el-radio-button>
           <el-radio-button label="name">会议名称</el-radio-button>
           <el-radio-button label="creator">创建者名称</el-radio-button>
+          <el-radio-button label="is_effective">会议状态</el-radio-button>
         </el-radio-group>
       </el-form-item>
 
@@ -238,6 +239,7 @@ watch(
   (newValue) => {
     findPageInfo.sortBy = newValue
     findPageInfo.pageNum = 1 // 切换排序时重置页码
+    console.log('当前排序方式', findPageInfo.sortBy)
     fetchMeetings()
   }
 )

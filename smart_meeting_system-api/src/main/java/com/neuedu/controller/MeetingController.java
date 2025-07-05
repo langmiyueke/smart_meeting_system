@@ -21,6 +21,11 @@ public class MeetingController {
         return result;
     }
 
+    /**
+     * 通过会议Id来获取单条会议详细信息
+     * @param id
+     * @return
+     */
     @GetMapping("getMeetingById")
     public Result getMeetingById(@RequestParam long id){
 
@@ -29,6 +34,7 @@ public class MeetingController {
 
     @GetMapping("sorted")
     public Result sorted(String method){
+
         Result result = meetingService.sorted(method);
         return result;
     }

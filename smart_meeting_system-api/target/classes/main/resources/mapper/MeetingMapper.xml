@@ -45,6 +45,9 @@
             <when test="sortBy == 'creator'">
                 ORDER BY creator ASC
             </when>
+            <when test="sortBy == 'is_effective'">
+                ORDER BY is_effective ASC
+            </when>
             <otherwise>
                 ORDER BY id
             </otherwise>
