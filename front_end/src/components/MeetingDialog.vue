@@ -5,7 +5,7 @@
     :title="isEdit ? '修改会议信息' : '新增会议'"
     width="50%"
   >
-    <el-form :model="form"  ref="formRef" label-width="100px">
+    <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
 
       <el-form-item label="会议名称" prop="name">
         <el-input v-model="form.name" />
@@ -124,7 +124,7 @@ const form = reactive({
   creator: "",
   cover: "",
   start_time: null,
-  is_effective: 1,
+  is_effective: 0,
 
 });
 
@@ -141,9 +141,7 @@ const rules = {
       trigger: "change"
     }
   ],
-  cover: [
-    { required: true, message: "请传入封面", trigger: "change" }
-  ],
+   
 };
 
 const uploadUrl = "http://localhost:8080/upload/uploadFiles";
@@ -233,6 +231,8 @@ function beforeImageUpload(file: File) {
   return true;
 }
 
+
+
 async function handleSubmit() {
   try {
     await formRef.value.validate();
@@ -241,12 +241,14 @@ async function handleSubmit() {
       ...form,
       is_effective: form.is_effective
     };
+    
 
     if (props.isEdit) {
       await handleRefactor('meeting', payload);
       ElMessage.success("编辑成功");
     } else {
       await handleAdd('meeting', payload);
+     
       ElMessage.success("添加成功");
     }
 

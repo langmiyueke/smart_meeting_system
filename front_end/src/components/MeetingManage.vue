@@ -130,8 +130,11 @@
 
   <el-table-column label="操作" >
     <template #default="scope">
-      <el-button size="mini" @click="openEditDialog(scope.row)">修改</el-button>
-      <el-button size="mini" type="danger" @click="confirmDelete(scope.row.id)">删除</el-button>
+      
+      <el-button size="mid" @click="openEditDialog(scope.row)">修改</el-button>
+      <el-button size="mid" color="green" @click="confirmReview(scope.row.id)">审核</el-button>
+      <el-button size="mid" type="danger" @click="confirmDelete(scope.row.id)">删除</el-button>
+      
     </template>
   </el-table-column>
 </el-table>
@@ -161,10 +164,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted,watch,reactive, onUnmounted } from 'vue'
+import { ref, onMounted,watch,reactive, onUnmounted, renderSlot } from 'vue'
 import MeetingDialog from './MeetingDialog.vue'
 import { ElMessageBox,ElMessage } from 'element-plus'
-import { deleteMeeting,getMeetings,clearIsDeleted } from '../api/index'
+import { deleteMeeting,getMeetings,clearIsDeleted, reViewMeeting } from '../api/index'
 import { useRouter } from 'vue-router'
 import { useMeetingStore } from '../stores/meetingStore'
 
@@ -339,6 +342,27 @@ const confirmDelete = async (meetingId: number) => {
     })
     await deleteMeeting(meetingId)
     ElMessage.success("删除成功")
+    fetchMeetings()
+  } catch (err) {
+    // 用户取消删除
+  }
+}
+
+// 会议审核确认
+const confirmReview = async (meetingId: number) => {
+  try {
+    await ElMessageBox.confirm('确认审核通过会议编号为' + meetingId +'的会议?', '确认', {
+      type: 'warning'
+    })
+    const response = await reViewMeeting(meetingId)
+
+    //针对操作结果进行反馈
+    if(response === '会议审核通过') {
+      ElMessage.success(response)
+    } else {
+      ElMessage.warning(response)
+    }
+
     fetchMeetings()
   } catch (err) {
     // 用户取消删除

@@ -29,4 +29,6 @@ public interface MeetingService extends IService<Meeting> {
     Result clearIsDeleted();
 
     Result getMeetingById(long id);
+
+    Result reViewMeeting(long id);
 }

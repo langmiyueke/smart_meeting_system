@@ -53,6 +53,11 @@ public class MeetingController {
         return result;
     }
 
+    @GetMapping("reViewMeeting")
+    private Result reViewMeeting(long id){
+        return meetingService.reViewMeeting(id);
+    }
+
     @PutMapping("handleRefactor")
     private Result handleRefactor(@RequestBody MeetingVo vo){
         System.out.println(vo);

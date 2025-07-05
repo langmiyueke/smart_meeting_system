@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -113,10 +114,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         BeanUtils.copyProperties(vo, meeting); // 只复制同名字段
         meeting.setName(vo.getName()); // 单独处理字段名不一样的
         meeting.setIsDeleted(0);
+
+        //初始时会议状态设置为无效 == 0
+        meeting.setIsEffective(0);
         String content = meeting.getContent();
         if (content.startsWith("<p>") && content.endsWith("</p>")) {
             content = content.substring(3, content.length() - 4);
-            System.out.println(content);
         }
         meeting.setContent(content);
         meetingMapper.insert(meeting);
@@ -173,6 +176,37 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         }
         System.out.println("查询到的课程: " + meeting);
         return Result.success(meeting);
+    }
+
+    @Override
+    public Result reViewMeeting(long id) {
+        System.out.println(id);
+        Meeting meeting = meetingMapper.selectById(id);
+        String message = "";
+
+        if(meeting==null){
+            return Result.error("会议不存在");
+        }
+        System.out.println("查询到的会议: " + meeting);
+        if(meeting.getIsEffective() == null) {
+
+            System.out.println("该会议状态异常，审核通过失败");
+            message = "该会议状态异常，审核通过失败";
+
+        } else if(meeting.getIsEffective() == 1) {
+            System.out.println("该会议状态为有效，无需再次审核通过");
+            message = "该会议状态为有效，无需再次审核通过";
+        } else {
+            meeting.setIsEffective(1);
+            System.out.println("会议审核通过");
+            message = "会议审核通过";
+        }
+
+        int i = meetingMapper.updateById(meeting);
+        System.out.println("影响行数: " + i);
+        if(i>0) return Result.success(message);
+
+        return Result.error(message);
     }
 
 

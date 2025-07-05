@@ -32,6 +32,14 @@ export const deleteMeeting = (id) => {
   });
 };
 
+//审核会议通过的方法
+export const reViewMeeting = (id) => {
+  return request.get("/meeting/reViewMeeting", {
+    params: {
+      id: id
+    }
+  });
+};
 
 // 添加获取单个会议详情的接口
 export const getMeetingById = (id) => {
