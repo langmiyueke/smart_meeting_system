@@ -208,8 +208,7 @@ const sendCode = async () => {
   if (!formRef.value) return;
 
   try {
-    // 同时验证【手机号、密码、确认密码】三个字段
-    await formRef.value.validateField(['enterprisePhone', 'password', 'confirmPassword']);
+    await formRef.value.validateField(['username','enterpriseName','enterprisePhone', 'password', 'confirmPassword']);
     
     await sendVerificationCode(registerForm.value.enterprisePhone)
     ElMessage.success('验证码已发送')
