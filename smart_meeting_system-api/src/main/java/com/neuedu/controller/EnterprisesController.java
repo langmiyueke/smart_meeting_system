@@ -1,6 +1,6 @@
-package com.neuedu.controler;
+package com.neuedu.controller;
 
-import com.neuedu.entity.Enterprises;
+import com.neuedu.pojo.Enterprises;
 import com.neuedu.entity.Users;
 import com.neuedu.mapper.UsersMapper;
 import com.neuedu.service.EnterpriseService;
