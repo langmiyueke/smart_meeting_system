@@ -6,19 +6,18 @@ import { getToken } from '../utils/token-utils';
 import CourseList from "../components/CourseList.vue";
 import MeetingManage from "../components/MeetingManage.vue"
 import MeetingDetail from "../components/MeetingDetail.vue";
+import EnterpriseManagement from "../components/EnterpriseManagement.vue";
 const routes = [
   { path: '/register', component: Register, name: "Register" },
-  { path: '/home', component: Home, name: "Home", redirect:'/courseList' },
+  { path: '/home', component: Home, name: "Home" },
   { path: '/login', component: Login, name: "Login" },
   { path: '/courseList', component: CourseList, name: "CourseList" },
   { path: '/', redirect: '/login' },
   { path: '/meetingManage', component: MeetingManage, name: "MeetingManage"},
   {
-  path: '/meetingDetail/:id',
-  name: 'MeetingDetail',
-  component: MeetingDetail  ,
-  meta: { title: '会议详情' }
-},
+  path: '/meetingDetail/:id',name: 'MeetingDetail',component: MeetingDetail  ,meta: { title: '会议详情' }
+  },
+  {path:'/enterpriseManage', component: EnterpriseManagement, name: "EnterpriseManage"},
 ];
 
 const router = createRouter({

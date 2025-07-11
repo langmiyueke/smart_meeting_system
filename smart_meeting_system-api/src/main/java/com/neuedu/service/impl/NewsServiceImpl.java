@@ -1,6 +1,6 @@
 package com.neuedu.service.impl;
 
-import com.alibaba.excel.EasyExcel;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -83,9 +83,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News>
         resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         resp.setHeader("Content-Disposition", "attachment;filename=selected_news.xlsx");
 
-        EasyExcel.write(resp.getOutputStream(), News.class)
-                .sheet("选中新闻")
-                .doWrite(list);
+
         resp.flushBuffer();
     }
 
@@ -107,9 +105,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News>
         resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         resp.setHeader("Content-Disposition", "attachment;filename=search_news.xlsx");
 
-        EasyExcel.write(resp.getOutputStream(), News.class)
-                .sheet("搜索结果")
-                .doWrite(list);
+
         resp.flushBuffer();
     }
 

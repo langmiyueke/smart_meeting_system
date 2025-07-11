@@ -98,7 +98,7 @@ const subsystems = ref([
         name: '用户管理',
         desc: '企业租户与用户管理',
         icon: User,
-        route: '/user'
+        route: '/enterpriseManage'
     },
     {
         name: '组织管理',
@@ -122,7 +122,7 @@ const subsystems = ref([
         name: '会议管理',
         desc: '会议组织与参会管理',
         icon: ChatSquare,
-        route: '/meeting'
+        route: '/meetingManage'
     },
     {
         name: '数据分析',
