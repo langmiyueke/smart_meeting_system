@@ -12,4 +12,5 @@ public class PageInfoVo {
     String keyWords;
     int pageNum;
     int pageSize;
+    String status;
 }
