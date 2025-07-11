@@ -1,4 +1,4 @@
-package com.neuedu.entity;
+package com.neuedu.pojo;
 
 public class SearchUserRequest {
     private Users users;

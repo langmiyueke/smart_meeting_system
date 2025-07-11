@@ -1,4 +1,4 @@
-package com.neuedu.entity;
+package com.neuedu.pojo;
 
 import org.w3c.dom.Text;
 

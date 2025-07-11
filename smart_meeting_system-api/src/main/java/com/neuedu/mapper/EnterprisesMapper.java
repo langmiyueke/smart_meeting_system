@@ -1,6 +1,6 @@
 package com.neuedu.mapper;
 
-import com.neuedu.entity.Enterprises;
+import com.neuedu.pojo.Enterprises;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

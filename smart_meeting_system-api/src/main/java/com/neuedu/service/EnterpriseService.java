@@ -1,6 +1,6 @@
 package com.neuedu.service;
 
-import com.neuedu.entity.Enterprises;
+import com.neuedu.pojo.Enterprises;
 import com.neuedu.mapper.EnterprisesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

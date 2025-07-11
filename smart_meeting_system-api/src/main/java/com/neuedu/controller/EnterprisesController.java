@@ -1,7 +1,7 @@
 package com.neuedu.controller;
 
-import com.neuedu.pojo.Enterprises;
-import com.neuedu.entity.Users;
+import com.neuedu.pojo.*;
+import com.neuedu.pojo.Users;
 import com.neuedu.mapper.UsersMapper;
 import com.neuedu.service.EnterpriseService;
 import com.neuedu.mapper.EnterprisesMapper;

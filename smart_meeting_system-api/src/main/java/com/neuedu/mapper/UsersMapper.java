@@ -1,7 +1,7 @@
 package com.neuedu.mapper;
 
-import com.neuedu.entity.SearchUserRequest;
-import com.neuedu.entity.Users;
+import com.neuedu.pojo.SearchUserRequest;
+import com.neuedu.pojo.Users;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
