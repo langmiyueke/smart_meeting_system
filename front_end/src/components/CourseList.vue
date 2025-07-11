@@ -1,15 +1,7 @@
 <template>
   <div>
 
-      <!-- 新增跳转栏 -->
 
-    <el-row>
-    <el-button type="primary" @click="goToPage('/courseList')">课程管理</el-button>
-    <el-button type="primary" @click="goToPage('/meetingManage')">会议管理</el-button>
-    <el-button type="primary">租户管理</el-button>
-    <el-button type="primary">用户管理</el-button>
-    </el-row>
-  
 
 
     <!-- 搜索框区域 -->

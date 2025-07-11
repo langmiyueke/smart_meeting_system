@@ -1,7 +1,6 @@
 package com.neuedu.controller;
 
 import com.neuedu.pojo.Enterprise;
-import com.neuedu.pojo.Employee;
 import com.neuedu.pojo.User;
 import com.neuedu.mapper.EmployeeMapper;
 import com.neuedu.mapper.UserMapper;
@@ -12,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("enterpriseManagement")
+@Transactional
 @CrossOrigin
 public class EnterpriseController {
     @Autowired
@@ -35,6 +34,7 @@ public class EnterpriseController {
     public Map<String, Object> getEnterprise(@RequestParam(defaultValue = "1") int currentPage,
                                              @RequestParam(defaultValue = "10") int pageSize) {
 
+
         if (currentPage <= 0 || pageSize <= 0) {
             throw new IllegalArgumentException("页码和每页大小必须是正整数");
         }
@@ -48,7 +48,9 @@ public class EnterpriseController {
         result.put("total", total);
         result.put("currentPage", currentPage);
         result.put("pageSize", pageSize);
-
+        for(Enterprise enterprise: enterprises) {
+            System.out.println(enterprise.getContact_person());
+        }
         return result;
     }
 

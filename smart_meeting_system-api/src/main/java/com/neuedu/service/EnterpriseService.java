@@ -1,7 +1,7 @@
 package com.neuedu.service;
 
-import com.neuedu.pojo.Enterprises;
-import com.neuedu.mapper.EnterprisesMapper;
+import com.neuedu.mapper.EnterpriseMapper;
+import com.neuedu.pojo.Enterprise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,20 +10,19 @@ import java.util.Random;
 @Service
 public class EnterpriseService {
     @Autowired
-    private EnterprisesMapper enterprisesMapper;
+    private EnterpriseMapper enterpriseMapper;
 
-    public int addEnterprises(Enterprises enterprises) {
+    public int addEnterprises(Enterprise enterprise) {
 
         // 设置用户标识为随机的八到十位随机数字与字母组合
         String random_enterprise_mark = generateRandomEnterpriseMark();
-        enterprises.setEnterprise_mark(random_enterprise_mark);
+        enterprise.setEnterprise_mark(random_enterprise_mark);
 
-
-        return enterprisesMapper.addEnterprises(enterprises);
+        return enterpriseMapper.addEnterprise(enterprise);
     }
 
     public String generateRandomEnterpriseMark() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789";//为了方便分分大写的o与0，大写的i与小写的l，将不生成0和l
         Random random = new Random();
         int length = 8 + random.nextInt(3); // 随机生成8到10位长度
         StringBuilder sb = new StringBuilder();

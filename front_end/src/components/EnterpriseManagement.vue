@@ -4,12 +4,25 @@ import {computed, onMounted, reactive, ref} from "vue";
 import {Delete, Message, Search} from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ZoomIn } from '@element-plus/icons-vue'
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import {useUserInfoStore} from "../stores/userInfo"
+const userInfo = useUserInfoStore()
+const token = userInfo.token
 
 //弹出框
 let updialogVisible=ref(false)
 let adddialogVisible=ref(false)
 
-
+const BASE_URL = 'http://localhost:8080'
+const api = axios.create({
+  baseURL: BASE_URL,
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `${token}`
+  }
+})
 
 //查询数据
 let enterprise_mark=ref("")
@@ -20,7 +33,7 @@ let name=ref("")
 
 
 //表格数据
-let enterprisesList=ref([])
+let enterpriseList=ref([])
 
 // 分页相关变量
 const currentPage = ref(1);
@@ -137,7 +150,7 @@ onMounted(()=>{
 
 //刷新与开始时加载数据
 function refresh() {
-  axios.get("http://localhost:8080/getenterprises", {
+  api.get("/enterpriseManagement/getenterprise", {
     params: {
       currentPage: currentPage.value,
       pageSize: pageSize.value
@@ -145,11 +158,13 @@ function refresh() {
   })
       .then(res => {
         //以名称顺序排序
-        enterprisesList.value = res.data.data.sort((a, b) => {
+        enterpriseList.value = res.data.data.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
         total.value = res.data.total;
+        
       });
+      
 }
 
 // 分页处理
@@ -183,7 +198,7 @@ function searchEnterprises() {
       name: name.value,
   };
 
-  axios.post("http://localhost:8080/searchenterprises", obj, {
+  api.post("/enterpriseManagement/searchenterprise", obj, {
     params: {
       currentPage: currentPage.value,
       pageSize: pageSize.value
@@ -191,7 +206,7 @@ function searchEnterprises() {
   })
       .then(res => {
         //以名称顺序排序
-        enterprisesList.value = res.data.data.sort((a, b) => {
+        enterpriseList.value = res.data.data.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
         total.value = res.data.total;
@@ -208,7 +223,7 @@ function reset(){
 
 // 修改租户逻辑
 function upEnterprise(enterprise_mark) {
-  axios.get("http://localhost:8080/getenterprisebyenterprisemark?enterprise_mark="+enterprise_mark)
+  api.get("/enterpriseManagement/getenterprisebyenterprisemark?enterprise_mark="+enterprise_mark)
       .then(res=> {
         Object.assign(up_enterprise, res.data);
         // 直接使用后端返回的图标数据
@@ -221,12 +236,12 @@ function upEnterprise(enterprise_mark) {
 }
 
 function ensureUpEnterprise(){
-  if(up_enterprise.name=="" || up_enterprise.name== null ||up_enterprise.contact_person==""||up_enterprise.contact_person==null
+  if(up_enterprise.name=="" || up_enterprise.name== null
   || up_enterprise.phone==""|| up_enterprise.phone== null){
-    ElMessage("租户名称，联系人，电话不能为空")
+    ElMessage("租户名称，电话不能为空")
   }
   else{
-    axios.post("http://localhost:8080/updateenterprises",up_enterprise)
+    api.post("/enterpriseManagement/updateenterprise",up_enterprise)
         .then(res=>{
           if(res.data>0){
             ElMessage.success("修改成功")
@@ -252,7 +267,7 @@ function  deleteEnterprise(enterprise_mark) {
       }
   )
       .then(() => {
-        axios.get("http://localhost:8080/delenterprises?enterprise_mark="+enterprise_mark)
+        api.get("/enterpriseManagement/delenterprise?enterprise_mark="+enterprise_mark)
             .then(res=>{
               if(res.data>0){
                 ElMessage({
@@ -290,17 +305,18 @@ function addEnterprise() {
   })
   adddialogVisible.value = true
 }
+
+
 function ensureAddEnterprise() {
   if(enterprise.name==null || enterprise.name==""||
-      enterprise.contact_person==null || enterprise.contact_person=="" ||
       enterprise.phone==null || enterprise.phone==""||
       enterprise.manager_username==null || enterprise.manager_username==""
   )
   {
-    ElMessage("租户名称，联系人，号码,管理员不能为空")
+    ElMessage("租户名称，号码,用户名不能为空")
   }
   else{
-    axios.post("http://localhost:8080/addenterprises", enterprise)
+    api.post("/enterpriseManagement/addenterprise", enterprise)
         .then(res => {
           if (res.data > 0) {
             ElMessage.success('新增租户成功')
@@ -314,7 +330,33 @@ function ensureAddEnterprise() {
           ElMessage.error('新增租户失败: ' + error.message)
         })
   }
+}
 
+
+// 导出租户数据为Excel
+function exportEnterprises() {
+  // 准备要导出的数据
+  const exportData = enterpriseList.value.map(ent => ({
+    '租户标识': ent.enterprise_mark,
+    '租户名称': ent.name,
+    '联系人': ent.contact_person,
+    '电话': ent.phone,
+    '用户名': ent.manager_username,
+  }));
+
+  // 创建工作表
+  const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+  // 创建工作簿
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "租户数据");
+
+  // 生成Excel文件
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+  // 保存文件
+  saveAs(data, `租户数据_${new Date().toISOString().slice(0, 10)}.xlsx`);
 }
 
 
@@ -378,7 +420,7 @@ function ensureAddEnterprise() {
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="联系人" prop="up_enterprise.contact_person" :rules="[{ required: true, message: '请输入联系人', trigger: 'red' }]">
+      <el-form-item label="联系人" prop="up_enterprise.contact_person" >
         <el-input
             v-model="up_enterprise.contact_person"
             style="width: 240px"
@@ -394,7 +436,7 @@ function ensureAddEnterprise() {
         </el-input>
       </el-form-item>
 
-      <el-form-item label="管理员" prop="up_enterprise.manager_username" :rules="[{ required: true, message: '请输入要创建的管理员用户名', trigger: 'red' }]">
+      <el-form-item label="用户名" prop="up_enterprise.manager_username" :rules="[{ required: true, message: '请输入要创建的用户名', trigger: 'red' }]">
         <el-text class="mx-1">{{up_enterprise.manager_username}} <br> 默认密码为该租户创建后的租户标识</el-text>
       </el-form-item>
       <el-form-item label="备注">
@@ -476,7 +518,7 @@ function ensureAddEnterprise() {
         </el-input>
       </el-form-item>
 
-      <el-form-item label="管理员" prop="enterprise.manager_username" :rules="[{ required: true, message: '请输入要创建的管理员用户名', trigger: 'red' }]">
+      <el-form-item label="用户名" prop="enterprise.manager_username" :rules="[{ required: true, message: '请输入要创建的用户名', trigger: 'red' }]">
         <el-input
             v-model="enterprise.manager_username"
             style="width: 240px"
@@ -553,18 +595,19 @@ function ensureAddEnterprise() {
           <br />
 
           <el-button type="success" @click="addEnterprise">新增</el-button>
+          <el-button type="warning" @click="exportEnterprises">导出</el-button>
 
         </el-header>
 
 
         <!--主要-->
         <el-main>
-          <el-table :data="enterprisesList" border>
+          <el-table :data="enterpriseList" border>
             <el-table-column prop="enterprise_mark" label="租户标识"></el-table-column>
             <el-table-column prop="contact_person" label="联系人"></el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
             <el-table-column prop="name" label="租户名称"></el-table-column>
-            <el-table-column prop="manager_username" label="管理员"></el-table-column>
+            <el-table-column prop="manager_username" label="用户名"></el-table-column>
             <el-table-column label="操作">
               <template #default="scope">
                 <el-button link type="primary" size="small" @click="upEnterprise(scope.row.enterprise_mark)">修改</el-button>
