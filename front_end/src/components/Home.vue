@@ -98,7 +98,7 @@ const subsystems = ref([
         name: '用户管理',
         desc: '企业租户与用户管理',
         icon: User,
-        route: '/enterpriseManage'
+        route: '/enterpriseManagement'
     },
     {
         name: '组织管理',
