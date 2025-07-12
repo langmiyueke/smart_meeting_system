@@ -24,7 +24,7 @@
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
-//public class MeetingControllerEnhancedTest {
+//public class MeetingControllerTest {
 //
 //    private MockMvc mockMvc;
 //    private ObjectMapper objectMapper = new ObjectMapper();
