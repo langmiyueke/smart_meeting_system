@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+<<<<<<< HEAD
+
+=======
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
 @CrossOrigin
 public class EmployeeController {
     @Autowired
