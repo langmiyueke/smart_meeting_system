@@ -88,7 +88,7 @@ public class EnterpriseController {
     @RequestMapping("/addenterprise")
     public int addEnterprise(@RequestBody Enterprise enterprise) {
         String manager_username=enterprise.getManager_username();
-        if (userMapper.getCount(manager_username)==0){
+        if (userMapper.getCount(manager_username)==1){
             return -1;
         }
         else{
