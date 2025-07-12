@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TenantVo {
-    private Long id;
+    private String enterpriseMark;
     private String name;
 }

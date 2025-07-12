@@ -14,7 +14,7 @@ import java.util.List;
 * @Entity com.neuedu.pojo.News
 */
 public interface NewsMapper extends BaseMapper<News> {
-    @Select("SELECT id, name FROM enterprises")
+    @Select("SELECT enterprise_mark, name FROM enterprise")
     List<TenantVo> getTenants();
 }
 

@@ -20,7 +20,6 @@
             v-model="loginForm.username"
             placeholder="请输入用户名"
             size="large"
-            :prefix-icon="User"
           >
             <template #prefix>
               <el-icon><User /></el-icon>
@@ -36,7 +35,6 @@
             placeholder="请输入密码"
             size="large"
             show-password
-            :prefix-icon="Lock"
           >
             <template #prefix>
               <el-icon><Lock /></el-icon>
@@ -53,7 +51,6 @@
               v-model="loginForm.adminToken"
               placeholder="请输入管理员令牌"
               size="large"
-              :prefix-icon="Key"
             >
               <template #prefix>
                 <el-icon><Key /></el-icon>
