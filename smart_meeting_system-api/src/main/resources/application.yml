@@ -23,7 +23,7 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/smart_meeting_system
       username: root
-      password: "032205"
+      password: "wbytc123"
       driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
