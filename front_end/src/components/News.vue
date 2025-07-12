@@ -138,7 +138,7 @@ onMounted(() => {
                 </el-form-item>
                 <el-form-item label="选择租户" prop="tenantId">
                     <el-select placeholder="请选择" v-model="newsAddModel.tenantId" @visible-change="loadTenantList">
-                        <el-option v-for="c in tenantModel" :key="c.id" :label="c.name" :value="c.id">
+                        <el-option v-for="c in tenantModel" :key="c.enterpriseMark" :label="c.name" :value="c.enterpriseMark">
                         </el-option>
                     </el-select>
                 </el-form-item>

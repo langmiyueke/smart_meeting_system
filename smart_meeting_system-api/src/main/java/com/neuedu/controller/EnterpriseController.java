@@ -48,9 +48,6 @@ public class EnterpriseController {
         result.put("total", total);
         result.put("currentPage", currentPage);
         result.put("pageSize", pageSize);
-        for(Enterprise enterprise: enterprises) {
-            System.out.println(enterprise.getContact_person());
-        }
         return result;
     }
 

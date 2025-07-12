@@ -8,11 +8,7 @@ public class Employee {
     private String username;
     private String password;
     private String role;
-<<<<<<< HEAD
     private String enterpriseName;
-=======
-    private String enterprise_name;
->>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
 
     private String nickname;
     private String phone;
@@ -22,15 +18,9 @@ public class Employee {
     private String department;
     private String job;
     private String comment;
-<<<<<<< HEAD
     private Timestamp createAt;
 
     private String updateCreateAt;
-=======
-    private Timestamp create_at;
-
-    private String update_create_at;
->>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
 
     public int getId() {
         return id;
@@ -129,7 +119,6 @@ public class Employee {
     }
 
     public Timestamp getCreate_at() {
-<<<<<<< HEAD
         return createAt;
     }
 
@@ -153,29 +142,3 @@ public class Employee {
         this.updateCreateAt = updateCreateAt;
     }
 }
-=======
-        return create_at;
-    }
-
-    public void setCreate_at(Timestamp create_at) {
-        this.create_at = create_at;
-    }
-
-    public String getEnterprise_name() {
-        return enterprise_name;
-    }
-
-    public void setEnterprise_name(String enterprise_name) {
-        this.enterprise_name = enterprise_name;
-    }
-
-
-    public String getUpdate_create_at() {
-        return update_create_at;
-    }
-
-    public void setUpdate_create_at(String update_creat_at) {
-        this.update_create_at = update_creat_at;
-    }
-}
->>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5

@@ -11,7 +11,7 @@
         <!-- 企业名称 -->
         <el-form-item prop="enterpriseName">
           <el-input v-model="registerForm.enterpriseName" placeholder="请输入企业名称" size="large"
-            :prefix-icon="OfficeBuilding">
+            >
             <template #prefix>
               <el-icon>
                 <OfficeBuilding />
@@ -22,7 +22,7 @@
 
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input v-model="registerForm.username" placeholder="请输入用户名" size="large" :prefix-icon="User">
+          <el-input v-model="registerForm.username" placeholder="请输入用户名" size="large" >
             <template #prefix>
               <el-icon>
                 <User />
@@ -33,7 +33,7 @@
 
         <!-- 企业联系方式 -->
         <el-form-item prop="enterprisePhone">
-          <el-input v-model="registerForm.enterprisePhone" placeholder="请输入企业联系方式" size="large" :prefix-icon="Iphone">
+          <el-input v-model="registerForm.enterprisePhone" placeholder="请输入企业联系方式" size="large" >
             <template #prefix>
               <el-icon>
                 <Iphone />
@@ -45,7 +45,7 @@
         <!-- 密码 -->
         <el-form-item prop="password">
           <el-input type="password" v-model="registerForm.password" placeholder="请输入密码" size="large" show-password
-            :prefix-icon="Lock">
+            >
             <template #prefix>
               <el-icon>
                 <Lock />
@@ -57,7 +57,7 @@
         <!-- 确认密码 -->
         <el-form-item prop="confirmPassword">
           <el-input type="password" v-model="registerForm.confirmPassword" placeholder="请再次输入密码" size="large"
-            show-password :prefix-icon="Lock">
+            show-password >
             <template #prefix>
               <el-icon>
                 <Lock />
@@ -69,7 +69,7 @@
         <!-- 验证码 -->
         <el-form-item prop="verificationCode">
           <div class="verification-code-container">
-            <el-input v-model="registerForm.verificationCode" placeholder="请输入验证码" size="large" :prefix-icon="Key"
+            <el-input v-model="registerForm.verificationCode" placeholder="请输入验证码" size="large" 
               class="verification-code-input">
               <template #prefix>
                 <el-icon>
@@ -77,15 +77,10 @@
                 </el-icon>
               </template>
             </el-input>
-            <el-button
-    type="primary"
-    size="large"
-    @click="sendCode"
-    :disabled="codeCountdown > 0"
-    class="verification-code-btn"
-  >
-    {{ codeCountdown > 0 ? `${codeCountdown}秒后重试` : '获取验证码' }}
-  </el-button>
+            <el-button type="primary" size="large" @click="sendCode" :disabled="codeCountdown > 0"
+              class="verification-code-btn">
+              {{ codeCountdown > 0 ? `${codeCountdown}秒后重试` : '获取验证码' }}
+            </el-button>
           </div>
         </el-form-item>
 
@@ -172,7 +167,7 @@ const registerRules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 4, max: 20, message: '用户名长度在4到20个字符', trigger: 'blur' },
-    { 
+    {
       pattern: /^[a-zA-Z0-9_]+$/,
       message: '用户名只能包含字母、数字和下划线',
       trigger: 'blur'
@@ -182,16 +177,16 @@ const registerRules = {
     { validator: validatePhone, trigger: 'blur' }
   ],
   password: [
-      { required: true, message: '请输入密码', trigger: 'blur' },
+    { required: true, message: '请输入密码', trigger: 'blur' },
     {
       pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,20}$/,
-      message: '密码必须6~20位包含大小写字母和数字',
+      message: '密码必须包含6~20位大小写字母和数字',
       trigger: 'blur'
     }
   ],
   confirmPassword: [
-      { required: true, message: '请确认密码', trigger: ['blur', 'change'] },
-      { validator: validatePassword, trigger: ['blur', 'change'] }
+    { required: true, message: '请确认密码', trigger: ['blur', 'change'] },
+    { validator: validatePassword, trigger: ['blur', 'change'] }
   ],
   verificationCode: [
     { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -208,8 +203,9 @@ const sendCode = async () => {
   if (!formRef.value) return;
 
   try {
-    await formRef.value.validateField(['username','enterpriseName','enterprisePhone', 'password', 'confirmPassword']);
-    
+    // 同时验证【手机号、密码、确认密码】三个字段
+    await formRef.value.validateField(['enterprisePhone', 'password', 'confirmPassword']);
+
     await sendVerificationCode(registerForm.value.enterprisePhone)
     ElMessage.success('验证码已发送')
     codeCountdown.value = 60
@@ -235,9 +231,9 @@ const register = async () => {
     const verifyRes = await verifyCode(registerForm.value.enterprisePhone,
       registerForm.value.verificationCode
     );
-  
+
     if (!verifyRes) {
-     throw new Error('验证码错误');
+      throw new Error('验证码错误');
     }
 
     // 验证通过后继续注册流程
