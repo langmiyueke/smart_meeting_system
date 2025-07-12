@@ -5,11 +5,6 @@
             <div class="logo">测盟汇管理系统</div>
             <el-menu mode="horizontal" :default-active="activeNav" @select="handleNavSelect" background-color="#304156"
                 text-color="#bfcbd9" active-text-color="#409EFF">
-                <el-menu-item index="home">首页</el-menu-item>
-                <el-menu-item index="dynamic">行业动态</el-menu-item>
-                <el-menu-item index="tech">技术平台</el-menu-item>
-                <el-menu-item index="cooperation">合作交流</el-menu-item>
-                <el-menu-item index="admin" v-if="userRole === 'admin'">管理后台</el-menu-item>
             </el-menu>
             <div class="user-info">
                 <el-dropdown @command="handleCommand">
@@ -81,6 +76,8 @@ import {
     User,  Monitor, Notebook, ChatSquare,
     DataBoard, ArrowDown, Connection
 } from '@element-plus/icons-vue'
+import {useUserInfoStore} from "../stores/userInfo"
+const userInfo = useUserInfoStore()
 
 const router = useRouter()
 
@@ -96,9 +93,9 @@ const activeNav = ref('home')
 const subsystems = ref([
     {
         name: '用户管理',
-        desc: '企业租户与用户管理',
+        desc: '企业用户管理',
         icon: User,
-        route: '/enterpriseManagement'
+        route: '/employeeManage'
     },
     {
         name: '组织管理',
@@ -125,10 +122,10 @@ const subsystems = ref([
         route: '/meetingManage'
     },
     {
-        name: '数据分析',
-        desc: '用户行为数据分析',
+        name: '租户管理',
+        desc: '企业租户管理',
         icon: DataBoard,
-        route: '/analytics'
+        route: '/enterpriseManagement'
     }
 ])
 
@@ -190,9 +187,9 @@ const goToPage = (page) => {
 onMounted(() => {
     // 模拟从API获取用户信息
     setTimeout(() => {
-        userName.value = '张经理'
+        userName.value = 'user1'
         userAvatar.value = ''
-        userRole.value = 'enterprise'
+        userRole.value = userInfo.role
     }, 500)
 })
 </script>

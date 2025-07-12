@@ -8,6 +8,11 @@ server:
 
 # ?????
 spring:
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
   servlet:
     multipart:
       max-file-size: 10MB
@@ -16,7 +21,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:mysql://localhost:3306/smart_meeting
+      url: jdbc:mysql://localhost:3306/smart_meeting_system
       username: root
       password: "wbytc123"
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -37,6 +42,8 @@ logging:
 
 # mybatis-plus???
 mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
   type-aliases-package: com.homework.pojo
   log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:

@@ -11,6 +11,7 @@ export const useUserInfoStore = defineStore('userInfo', {
 
 	state: () => ({
     token: getToken(),
+    name: '',
     role: '',
     id:''
   }),
@@ -26,15 +27,17 @@ export const useUserInfoStore = defineStore('userInfo', {
       this.token = token
       setToken(token)
     },
-   /*  async getInfo () {
+     async getInfo () {
       const result = await getUserInfo()
-      this.role = result.loginUser.role
+      this.role = result.role
+      this.name = result.name
       this.id = result.loginUser.id
-    }, */
+    }, 
     initUserInfo(){
       removeToken()
       this.role = ""
       this.id = ""
+      this.name = ""
       console.log('1111111111');
     }
   },
