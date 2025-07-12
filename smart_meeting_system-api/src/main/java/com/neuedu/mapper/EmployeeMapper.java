@@ -13,6 +13,7 @@ public interface EmployeeMapper {
             "SELECT * " +
             "FROM employee  " +
             "WHERE 1=1" +
+<<<<<<< HEAD
             "<if test='enterpriseName != null and enterpriseName != \"\"'>" +
             "  AND enterprise_name=#{enterpriseName} " +
             "</if>" +
@@ -23,14 +24,31 @@ public interface EmployeeMapper {
     // 获取总数的方法
     @Select("SELECT COUNT(*) FROM employee where enterprise_name=#{enterpriseName}")
     int getTotalCount(@Param("enterpriseName") String enterpriseName);
+=======
+            "<if test='enterprise_name != null and enterprise_name != \"\"'>" +
+            "  AND enterprise_name=#{enterprise_name} " +
+            "</if>" +
+            "LIMIT #{pageSize} OFFSET #{offset}" +
+            "</script>")
+    List<Employee> getEmployeeByPage(@Param("enterprise_name") String enterprise_name, @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+    // 获取总数的方法
+    @Select("SELECT COUNT(*) FROM employee where enterprise_name=#{enterprise_name}")
+    int getTotalCount(@Param("enterprise_name") String enterprise_name);
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
 
     //通过名称，电话，状态，创建时间,页数,公司查找员工
     @Select("<script>" +
             "SELECT * " +
             "FROM employee " +
             "WHERE 1=1" +
+<<<<<<< HEAD
             "<if test='request.employee.enterpriseName != null and request.employee.enterpriseName != \"\"'>" +
             "  AND enterprise_name=#{request.employee.enterpriseName} " +
+=======
+            "<if test='request.employee.enterprise_name != null and request.employee.enterprise_name != \"\"'>" +
+            "  AND enterprise_name=#{request.employee.enterprise_name} " +
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
             "</if>" +
             "<if test='request.employee.username != null and request.employee.username != \"\"'>" +
             "  AND username LIKE CONCAT('%', #{request.employee.username}, '%') " +
@@ -74,8 +92,13 @@ public interface EmployeeMapper {
             "<if test='request.start != null and request.start != \"Invalid Date\"'>" +
             "  AND create_at &gt;= #{request.start} " +
             "</if>" +
+<<<<<<< HEAD
             "<if test='request.employee.enterpriseName != null and request.employee.enterpriseName != \"\"'>" +
             "  AND enterprise_name = #{request.employee.enterpriseName} " +
+=======
+            "<if test='request.employee.enterprise_name != null and request.employee.enterprise_name != \"\"'>" +
+            "  AND enterprise_name = #{request.employee.enterprise_name} " +
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
             "</if>" +
             "</script>")
     int getSearchCount(@Param("request") SearchEmployeeRequest request);
@@ -87,7 +110,11 @@ public interface EmployeeMapper {
 
     //添加员工信息
     @Insert("INSERT INTO employee (id,username,password,role,enterprise_name,nickname,phone,email,sex,state,department,job,comment,create_at)" +
+<<<<<<< HEAD
             "VALUES (null,#{username},#{password},#{role},#{enterpriseName},#{nickname},#{phone},#{email},#{sex},#{state},#{department},#{job},#{comment},#{createAt}) ;")
+=======
+            "VALUES (null,#{username},#{password},#{role},#{enterprise_name},#{nickname},#{phone},#{email},#{sex},#{state},#{department},#{job},#{comment},#{create_at}) ;")
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addEmployee(Employee employee);
 
@@ -108,7 +135,14 @@ public interface EmployeeMapper {
     //通过租户的名称查找属于该租户的员工id
     @Select("SELECT id " +
             "FROM employee " +
+<<<<<<< HEAD
             "WHERE enterprise_name=#{enterpriseName}")
     List<Integer> getEmployeeIdByEnterpriseName(String enterpriseName);
 
 }
+=======
+            "WHERE enterprise_name=#{enterprise_name}")
+    List<Integer> getEmployeeIdByEnterpriseName(String enterprise_name);
+
+}
+>>>>>>> eabf3a5c3f406a5439a9b3dc854c3d2a9a6c92d5
